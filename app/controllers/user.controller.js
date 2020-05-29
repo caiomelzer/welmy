@@ -1,3 +1,10 @@
+const db = require("../models");
+const config = require("../config/auth.config");
+const Measurement = db.measurement;
+const Equipment = db.equipment;
+const User = db.user;
+const Patient = db.patient;
+
 exports.allAccess = (req, res) => {
   res.status(200).send("Public Content.");
 };
@@ -13,3 +20,7 @@ exports.adminBoard = (req, res) => {
 exports.moderatorBoard = (req, res) => {
   res.status(200).send("Moderator Content.");
 };
+
+
+
+

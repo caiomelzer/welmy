@@ -15,9 +15,9 @@ checkDuplicateUsernameOrEmail = (req, res, next) => {
       });
       return;
     }
-
+    next();
     // Email
-    User.findOne({
+    /*User.findOne({
       where: {
         email: req.body.email
       }
@@ -30,7 +30,7 @@ checkDuplicateUsernameOrEmail = (req, res, next) => {
       }
 
       next();
-    });
+    });*/
   });
 };
 

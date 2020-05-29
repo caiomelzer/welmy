@@ -11,29 +11,28 @@ module.exports = function(app) {
         next();
     });
 
-    //Show All Measurements
+    //Show All Measurements from Equipament
     app.get(
-        "/api/equipments/:mac/measurements/", 
+        "/api/equipments/:mac/measurements/last", 
         controller.findLastMeasurementByEquipment
     );
 
-    //Find specific Measurement
+    //Show Specific Measurement from Equipament
+    app.get(
+        "/api/equipments/:mac/measurements/:measurement/", 
+        controller.findMeasurementSpecificByEquipment
+    );
+
+    //Add Measurement from Equipament
     app.post(
         "/api/equipments/:mac/measurements/", 
         [authJwt.verifyToken],
         controller.addMeasurement
     );
 
-    //Find specific Measurement
+    //Update specific Measurement
     app.put(
         "/api/equipments/:mac/measurements/:id", 
         controller.setWeightToMeasurement
     );
-
-    //Show All Measurements from User
-    app.get(
-        "/api/users/:id/measurements/", 
-        controller.findAllMeasurementByUser
-    );
-
 };

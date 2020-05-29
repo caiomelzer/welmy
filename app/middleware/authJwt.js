@@ -50,9 +50,24 @@ isModerator = (req, res, next) => {
           return;
         }
       }
-
       res.status(403).send({
         message: "Require Moderator Role!"
+      });
+    });
+  });
+};
+
+isDoctor = (req, res, next) => {
+  User.findByPk(req.userId).then(user => {
+    user.getRoles().then(roles => {
+      for (let i = 0; i < roles.length; i++) {
+        if (roles[i].name === "doctor") {
+          next();
+          return;
+        }
+      }
+      res.status(403).send({
+        message: "Require Doctor Role!"
       });
     });
   });
@@ -84,6 +99,7 @@ const authJwt = {
   verifyToken: verifyToken,
   isAdmin: isAdmin,
   isModerator: isModerator,
-  isModeratorOrAdmin: isModeratorOrAdmin
+  isModeratorOrAdmin: isModeratorOrAdmin,
+  isDoctor: isDoctor
 };
 module.exports = authJwt;

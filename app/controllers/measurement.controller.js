@@ -3,11 +3,12 @@ const config = require("../config/auth.config");
 const Measurement = db.measurement;
 const Equipment = db.equipment;
 const User = db.user;
+const Patient = db.patient;
 
 exports.addMeasurement = (req, res) => {
     const mac = req.params.mac;
-    const userId = req.body.userId;
-    if(!userId)
+    const patientId = req.body.patientId;
+    if(!patientId)
         return res.status(404).send({ message: "User Not found." });
     if(!mac)
         return res.status(404).send({ message: "Mac Not found." });
@@ -15,19 +16,18 @@ exports.addMeasurement = (req, res) => {
     .then(equipment => {
         Measurement.create({})
         .then(measurement => {
-            console.log(measurement.get('id'));
             equipment.addMeasurement(measurement).then(() => {
-                User.findOne({
-                    where: {id : userId}
+                Patient.findOne({
+                    where: {id : patientId}
                 })
-                .then(user => {
-                    console.log(measurement.get('id'));
-                    user.addMeasurement(measurement.get('id')).then(() => {
+                .then(patient => {
+                    patient.addMeasurement(measurement.get('id'))
+                    .then(() => {
                         res.send({ message: "Measurement registered successfully!" });
                     })
                     .catch(err => {
                         res.status(500).send({
-                            message: err.message || "User not found."
+                            message: err.message || "Patient not found."
                         });
                     }); 
                 });  
@@ -48,6 +48,52 @@ exports.addMeasurement = (req, res) => {
         res.status(500).send({
             message: "Error retrieving Equipment with MAC=" + mac
         });
+    });
+};
+
+exports.findMeasurementSpecificByEquipment = (req, res) => {
+    const mac = req.params.mac;
+    if(!mac)
+        return res.status(404).send({ message: "Mac Not found." });
+    const measurementId = req.params.measurement;
+    if(!measurementId)
+        return res.status(404).send({ message: "Measurement Not found." });
+    Equipment.findOne({
+        limit: 1,
+        attributes: ['mac'],
+        where: {
+            mac : mac
+        },
+        include: [{
+            attributes: ['id','weight'],
+            model: Measurement,
+            where: [{
+                weight : null
+            }]
+        }]        
+    })
+    .then(equipment => {
+        equipment.getMeasurements({
+            where:[{
+                id: measurementId
+            }],
+            order: [ [ 'id', 'ASC' ]]
+        })
+        .then(data => {
+            res.send(data);
+        })
+        .catch(err => {
+            res.status(500).send({
+              message:
+                err.message || "Some error occurred while retrieving Measurements."
+            });
+        });   
+    })
+    .catch(err => {
+      res.status(500).send({
+        message:
+          err.message || "Some error occurred while retrieving Measurement."
+      });
     });
 };
 
@@ -92,22 +138,22 @@ exports.findLastMeasurementByEquipment = (req, res) => {
     });
 };
 
-exports.findAllMeasurementByUser = (req, res) => {
-    const userId = req.params.id;
-    if(!userId)
-        return res.status(404).send({ message: "User Not found." });
-    User.findOne({
+exports.findAllMeasurementByPatient = (req, res) => {
+    const patientId = req.params.id;
+    if(!patientId)
+        return res.status(404).send({ message: "Patient Not found." });
+    Patient.findOne({
         attributes: ['id','username'],
         where: {
-            id : userId
+            id : patientId
         },
         include: [{
             model: Measurement,
             order: [ [ 'createdAt', 'ASC' ]]
         }]        
     })
-    .then(user => {
-        user.getMeasurements()
+    .then(patient => {
+        patient.getMeasurements()
         .then(data => {
             res.send(data);
         })

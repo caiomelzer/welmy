@@ -28,6 +28,7 @@ db.user = require("../models/user.model.js")(sequelize, Sequelize);
 db.role = require("../models/role.model.js")(sequelize, Sequelize);
 db.equipment = require("../models/equipment.model.js")(sequelize, Sequelize);
 db.measurement = require("../models/measurement.model.js")(sequelize, Sequelize);
+db.patient = require("../models/patient.model.js")(sequelize, Sequelize);
 
 db.role.belongsToMany(db.user, {
   through: "user_roles",
@@ -44,20 +45,30 @@ db.user.belongsToMany(db.equipment, {
   foreignKey: "userId",
   otherKey: "equipmentId"
 });
-db.user.belongsToMany(db.measurement, {
-  through: "user_measurements",
-  foreignKey: "userId",
+db.patient.belongsToMany(db.measurement, {
+  through: "patient_measurements",
+  foreignKey: "patientId",
   otherKey: "measurementId"
 });
-db.measurement.belongsToMany(db.user, {
-  through: "user_measurements",
+db.measurement.belongsToMany(db.patient, {
+  through: "patient_measurements",
   foreignKey: "measurementId",
-  otherKey: "userId"
+  otherKey: "patientId"
 });
 db.equipment.belongsToMany(db.measurement, {
   through: "equipment_measurements",
   foreignKey: "equipmentMac",
   otherKey: "measurementId"
+});
+db.user.belongsToMany(db.patient, {
+  through: "user_patients",
+  foreignKey: "userId",
+  otherKey: "patientId"
+});
+db.patient.belongsToMany(db.user, {
+  through: "user_patients",
+  foreignKey: "patientId",
+  otherKey: "userId"
 });
 
 db.ROLES = ["user", "admin", "moderator","doctor"];
