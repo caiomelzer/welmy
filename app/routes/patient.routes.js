@@ -11,7 +11,6 @@ module.exports = function(app) {
         next();
     });
 
-
     //Add Patients 
     app.post(
         "/api/doctors/:doctorId/patients/", 
