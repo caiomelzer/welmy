@@ -104,12 +104,27 @@ exports.listPatientsByDoctor = (req, res) => {
 exports.listMeasurementByPatient = (req, res) => {
     const patientId = req.params.patientId;
     var viewType = 'last_7_days';
+    var stringSQL = '';
     if(!patientId)
         return res.status(404).send({ message: "Patient Not found." });
     if(req.params.viewType)
         viewType = req.params.viewType;
+    switch(viewType){
+        case 'last_7_days':
+            stringSQL = 'SELECT * FROM vw_patient_measurements_full_'+viewType+' where id = '+patientId+' ORDER BY year, month, day DESC'
+            break;
+        case 'last_30_days':
+            stringSQL = 'SELECT * FROM vw_patient_measurements_full_'+viewType+' where id = '+patientId+' ORDER BY year, month, day DESC'
+            break; 
+        case 'last_month':
+            stringSQL = 'SELECT * FROM vw_patient_measurements_full_'+viewType+' where id = '+patientId+' ORDER BY year, month DESC'
+            break;      
+        case 'last_year':
+            stringSQL = 'SELECT * FROM vw_patient_measurements_full_'+viewType+' where id = '+patientId+' ORDER BY year DESC'
+            break;             
+    }    
     db.sequelize.query(
-        'SELECT * FROM measurements_calculated_'+viewType+' where patientId = '+patientId+' ORDER BY computedAt DESC',
+        stringSQL,
         {
           type: QueryTypes.SELECT
         }
@@ -150,3 +165,17 @@ exports.listPatient = (req, res) => {
     });
 
 };
+
+
+exports.listPatientMeasurements = (req, res) => {
+    db.sequelize.query("SELECT * FROM patients", { type: sequelize.QueryTypes.SELECT})
+    .then(function(users) {
+        res.send(users);
+    })
+    .catch(err => {
+        res.status(500).send({
+        message:
+            err.message || "Some error occurred while retrieving measurements."
+        });
+    });
+}

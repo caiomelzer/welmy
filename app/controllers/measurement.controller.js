@@ -4,6 +4,7 @@ const Measurement = db.measurement;
 const Equipment = db.equipment;
 const User = db.user;
 const Patient = db.patient;
+const sequelize = require('sequelize');
 
 exports.addMeasurement = (req, res) => {
     const mac = req.params.mac;

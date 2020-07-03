@@ -35,4 +35,5 @@ module.exports = function(app) {
         "/api/equipments/:mac/measurements/:id", 
         controller.setWeightToMeasurement
     );
+
 };
