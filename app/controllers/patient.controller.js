@@ -109,20 +109,7 @@ exports.listMeasurementByPatient = (req, res) => {
         return res.status(404).send({ message: "Patient Not found." });
     if(req.params.viewType)
         viewType = req.params.viewType;
-    switch(viewType){
-        case 'last_7_days':
-            stringSQL = 'SELECT * FROM vw_patient_measurements_full_'+viewType+' where id = '+patientId+' ORDER BY year, month, day DESC'
-            break;
-        case 'last_30_days':
-            stringSQL = 'SELECT * FROM vw_patient_measurements_full_'+viewType+' where id = '+patientId+' ORDER BY year, month, day DESC'
-            break; 
-        case 'last_month':
-            stringSQL = 'SELECT * FROM vw_patient_measurements_full_'+viewType+' where id = '+patientId+' ORDER BY year, month DESC'
-            break;      
-        case 'last_year':
-            stringSQL = 'SELECT * FROM vw_patient_measurements_full_'+viewType+' where id = '+patientId+' ORDER BY year DESC'
-            break;             
-    }    
+    stringSQL = 'SELECT * FROM vw_patient_measurements_full_'+viewType+' where id = '+patientId+' ORDER BY computetAt DESC'    
     db.sequelize.query(
         stringSQL,
         {
