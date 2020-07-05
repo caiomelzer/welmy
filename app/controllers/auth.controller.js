@@ -41,7 +41,11 @@ exports.signup = (req, res) => {
       Patient.create({
         id: user.get('id'),
         fullname: req.body.fullname,
-        email: req.body.email
+        email: req.body.email,
+        username: req.body.username
+      })
+      .then((patient) =>{
+        user.setPatients(patient);
       });
     })
     .catch(err => {
