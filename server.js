@@ -47,12 +47,12 @@ app.listen(PORT, () => {
 });
 
 
-setInterval(function() {
-  stringSQL = 'DELETE FROM `measurements` WHERE `weight` IS NULL and `createdAt` <= DATE_SUB(NOW(), INTERVAL 1 MINUTE)';
-  db.sequelize.query(
-    stringSQL
-  );
-}, 10000);
+// setInterval(function() {
+//   stringSQL = 'DELETE FROM `measurements` WHERE `weight` IS NULL and `createdAt` <= DATE_SUB(NOW(), INTERVAL 20 SECOND)';
+//   db.sequelize.query(
+//     stringSQL
+//   );
+// }, 20000);
 
 function initial() {
   Role.create({
