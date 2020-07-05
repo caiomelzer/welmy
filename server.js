@@ -46,6 +46,26 @@ app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}.`);
 });
 
+
+setInterval(function() {
+  stringSQL = 'DELETE FROM `measurements` WHERE `weight` IS NULL and `createdAt` <= DATE_SUB(NOW(), INTERVAL 1 MINUTE)';
+  db.sequelize.query(
+    stringSQL,
+    {
+      type: QueryTypes.INSERT
+    }
+  )
+  .then(patient => {
+    res.send('Old measures clear!');
+  })
+  .catch(err => {
+      res.status(500).send({
+      message:
+          err.message || "Some error occurred while retrieving delete measures."
+      });
+  });
+}, 10000);
+
 function initial() {
   Role.create({
     id: 1,
