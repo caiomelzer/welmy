@@ -52,7 +52,7 @@ setInterval(function() {
   db.sequelize.query(
     stringSQL,
     {
-      type: QueryTypes.INSERT
+      type: QueryTypes.SELECT
     }
   )
   .then(patient => {
