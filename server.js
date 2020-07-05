@@ -50,20 +50,8 @@ app.listen(PORT, () => {
 setInterval(function() {
   stringSQL = 'DELETE FROM `measurements` WHERE `weight` IS NULL and `createdAt` <= DATE_SUB(NOW(), INTERVAL 1 MINUTE)';
   db.sequelize.query(
-    stringSQL,
-    {
-      type: QueryTypes.SELECT
-    }
-  )
-  .then(patient => {
-    res.send('Old measures clear!');
-  })
-  .catch(err => {
-      res.status(500).send({
-      message:
-          err.message || "Some error occurred while retrieving delete measures."
-      });
-  });
+    stringSQL
+  );
 }, 10000);
 
 function initial() {
