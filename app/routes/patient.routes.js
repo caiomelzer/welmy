@@ -21,7 +21,8 @@ module.exports = function(app) {
     //List All Patients from Doctor
     app.get(
         "/api/doctors/:doctorId/patients/", 
-        [authJwt.verifyToken, authJwt.isDoctor],
+        //[authJwt.verifyToken, authJwt.isDoctor],
+        [authJwt.verifyToken],
         controller.listPatientsByDoctor
     );
 
