@@ -173,6 +173,7 @@ exports.findAllMeasurementByPatient = (req, res) => {
     });
 };
 
+
 exports.setWeightToMeasurement = (req, res) => {
     const id = req.params.id;
     if(!req.body.weight)

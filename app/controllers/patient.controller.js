@@ -125,10 +125,33 @@ exports.listMeasurementByPatient = (req, res) => {
             err.message || "Some error occurred while retrieving equipments."
         });
     });
-    
-    
-
 };
+
+exports.listLastMeasurementByPatient = (req, res) => {
+    const patientId = req.params.patientId;
+    var stringSQL = '';
+    if(!patientId)
+        return res.status(404).send({ message: "Patient Not found." });
+    if(req.params.viewType)
+        viewType = req.params.viewType;
+    stringSQL = 'SELECT * FROM vw_patient_measurements_full where id = '+patientId+' ORDER BY date DESC LIMIT 0,1'    
+    db.sequelize.query(
+        stringSQL,
+        {
+          type: QueryTypes.SELECT
+        }
+    )
+    .then(measure => {
+        res.send(measure);
+    })
+    .catch(err => {
+        res.status(500).send({
+        message:
+            err.message || "Some error occurred while retrieving equipments."
+        });
+    });
+};
+
 exports.listPatient = (req, res) => {
     console.log('aidsadas');    
 

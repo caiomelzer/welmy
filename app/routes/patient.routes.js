@@ -33,6 +33,13 @@ module.exports = function(app) {
         controller.listMeasurementByPatient
     );
 
+    //List Last Measurement From Patient
+    app.get(
+        "/api/patients/:patientId/measurement/last", 
+        [authJwt.verifyToken],
+        controller.listLastMeasurementByPatient
+    );
+
     //List data From Patient
     app.get(
         "/api/patients/:patientId/", 
