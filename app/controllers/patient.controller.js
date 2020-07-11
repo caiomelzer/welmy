@@ -75,24 +75,17 @@ exports.addPatient = (req, res) => {
     })   
 };
 exports.listPatientsByDoctor = (req, res) => {
-    const doctorId = req.params.doctorId;
-    if(!doctorId)
-        return res.status(404).send({ message: "Patient Not found." });
-    User.findOne({
-        attributes: ['id','username'],
-        where: {
-            id : doctorId
-        },
-        include: [{
-            model: Patient,
-            order: [ [ 'createdAt', 'ASC' ]]
-        }]  
-    })
-    .then(user => {
-        user.getPatients()
-        .then(data => {
-            res.send(data);
-        });
+    const patientId = req.params.patientId;
+    var stringSQL = '';
+    stringSQL = 'SELECT * FROM patients ORDER BY fullname ASC'    
+    db.sequelize.query(
+        stringSQL,
+        {
+          type: QueryTypes.SELECT
+        }
+    )
+    .then(patient => {
+        res.send(patient);
     })
     .catch(err => {
         res.status(500).send({
@@ -100,6 +93,31 @@ exports.listPatientsByDoctor = (req, res) => {
             err.message || "Some error occurred while retrieving equipments."
         });
     });
+    // const doctorId = req.params.doctorId;
+    // if(!doctorId)
+    //     return res.status(404).send({ message: "Patient Not found." });
+    // User.findOne({
+    //     attributes: ['id','username'],
+    //     where: {
+    //         id : doctorId
+    //     },
+    //     include: [{
+    //         model: Patient,
+    //         order: [ [ 'createdAt', 'ASC' ]]
+    //     }]  
+    // })
+    // .then(user => {
+    //     user.getPatients()
+    //     .then(data => {
+    //         res.send(data);
+    //     });
+    // })
+    // .catch(err => {
+    //     res.status(500).send({
+    //     message:
+    //         err.message || "Some error occurred while retrieving equipments."
+    //     });
+    // });
 };
 exports.listMeasurementByPatient = (req, res) => {
     const patientId = req.params.patientId;
