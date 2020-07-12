@@ -35,7 +35,7 @@ module.exports = function(app) {
 
     //List Last Measurement From Patient
     app.get(
-        "/api/patients/:patientId/measurement/last", 
+        "/api/patients/:patientId/lastMeasure/", 
         [authJwt.verifyToken],
         controller.listLastMeasurementByPatient
     );
