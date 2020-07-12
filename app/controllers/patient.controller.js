@@ -127,7 +127,7 @@ exports.listMeasurementByPatient = (req, res) => {
         return res.status(404).send({ message: "Patient Not found." });
     if(req.params.viewType)
         viewType = req.params.viewType;
-    stringSQL = 'SELECT * FROM `vw_patient_measurements_'+viewType+'` where id = '+patientId+' ORDER BY x ASC'    
+    stringSQL = 'SELECT * FROM `vw_patient_measurements_full_'+viewType+'` where id = '+patientId+' ORDER BY x ASC'    
     db.sequelize.query(
         stringSQL,
         {
